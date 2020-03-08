@@ -2,7 +2,7 @@ const Product = require("../models/product.model");
 const category = require("../models/category.model");
 
 
-exports.test = function (req, res) {
+exports.test = function(req, res) {
     res.send("test");
 };
 
@@ -13,7 +13,7 @@ exports.product_creat = (req, res) => {
         let photo = req.file.path;
         photo = photo.replace(/\\/g, '/');
         photo = photo.replace(/ /g, '%20');
-        photo = photo.replace(/'()'/,'_');
+        photo = photo.replace(/'()'/, '_');
         let product = new Product({
             English_Name: req.body.English_Name,
             Arabic_Name: req.body.Arabic_Name,
@@ -21,7 +21,7 @@ exports.product_creat = (req, res) => {
             company: req.body.company,
             category: req.body.category,
             price: req.body.price,
-            photo: process.env.baseUrl+"/product/" + photo,
+            photo: process.env.baseUrl + "/product/" + photo,
             avilable: req.body.avilable,
             avilableQantaty: req.body.avilableQantaty
         });
@@ -30,7 +30,7 @@ exports.product_creat = (req, res) => {
             if (err) return err;
             res.redirect("/product");
         });
-    } catch{
+    } catch {
         let product = new Product({
             English_Name: req.body.English_Name,
             Arabic_Name: req.body.Arabic_Name,
@@ -38,14 +38,16 @@ exports.product_creat = (req, res) => {
             company: req.body.company,
             category: req.body.category,
             price: req.body.price,
-            photo: process.env.baseUrl+"/product/public/image/products/defult.png",
+            photo: req.body.photo,
             avilable: req.body.avilable,
             avilableQantaty: req.body.avilableQantaty
         });
 
         product.save((err) => {
             if (err) return err;
-            res.redirect("/product");
+            res.status(200).json({
+                success: true
+            })
         });
     }
 };
@@ -60,13 +62,10 @@ exports.product_details_dash = (req, res) => {
         } else {
             category.find(null).exec().then(category => {
                 if (category != null) {
-                    res.status(200).json
-                        (
-                            {
-                                product: product,
-                                category: category
-                            }
-                        )
+                    res.status(200).json({
+                        product: product,
+                        category: category
+                    })
                 } else res.status(200).json(product)
             }).catch((err) => {
                 console.log(err)
@@ -127,13 +126,10 @@ exports.allproductsHome = (req, res) => {
         } else {
             category.find(null).exec().then(category => {
                 if (category != null) {
-                    res.status(200).json
-                        (
-                            {
-                                product: product,
-                                categorys: category
-                            }
-                        )
+                    res.status(200).json({
+                        product: product,
+                        categorys: category
+                    })
                 } else res.status(200).json(product)
             }).catch((err) => {
                 console.log(err)
@@ -162,13 +158,10 @@ exports.allproducts_dash = (req, res) => {
         } else {
             category.find(null).exec().then(category => {
                 if (category != null) {
-                    res.status(200).json
-                        (
-                            {
-                                product: product,
-                                categorys: category
-                            }
-                        )
+                    res.status(200).json({
+                        product: product,
+                        categorys: category
+                    })
                 } else res.status(200).json(product)
             }).catch((err) => {
                 console.log(err)
@@ -217,7 +210,7 @@ exports.product_update = (req, res) => {
         (err, product) => {
             console.log(req.body)
             if (err) return err;
-            res.json({success:true});
+            res.json({ success: true });
         });
 };
 
